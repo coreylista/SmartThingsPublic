@@ -1400,12 +1400,11 @@ private def onZoneEvent(evt, sensorType) {
     }
     else if (zone.chime)
     {
-    	chimeDevices?.each() { 
-               	it.beep()
-            }
+        chimeDevices?.each() { 
+            it.beep()
+            pause(200)
+        }
     }
-    
-    
 }
 
 def onLocation(evt) {
