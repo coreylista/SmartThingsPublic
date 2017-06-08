@@ -20,11 +20,9 @@ metadata {
         capability "Motion Sensor"
 		capability "Temperature Measurement"
 		capability "Refresh"
-		capability "Lock Codes"
 		capability "Tamper Alert"
 		capability "Tone"
         capability "Button"
-        capability "Polling"
         capability "Health Check"
         
 		attribute "armMode", "String"
@@ -207,7 +205,6 @@ def updated() {
 }
 
 def initialize() {
-	log.trace "initialize()"
     configure()
 }
 
@@ -224,7 +221,7 @@ def configure() {
 
 	// temperature minReportTime 30 seconds, maxReportTime 5 min. Reporting interval if no activity
 	// battery minReport 30 seconds, maxReportTime 6 hrs by default
-	return refresh() + zigbee.batteryConfig() + zigbee.temperatureConfig(30, 300) + zigbee.enrollResponse() // send refresh cmds as part of config
+	return refresh() + zigbee.batteryConfig() + zigbee.temperatureConfig() + zigbee.enrollResponse() // send refresh cmds as part of config
 }
 
 def ping() { 
@@ -236,7 +233,7 @@ def refresh() {
 			zigbee.readAttribute(0x0001,0x20) + 
 			zigbee.readAttribute(0x0402,0x00) + 
             zigbee.batteryConfig() + 
-            zigbee.temperatureConfig(30, 300)
+            zigbee.temperatureConfig()
 }
 
 private formatLocalTime(time, format = "EEE, MMM d yyyy @ h:mm a z") {
@@ -585,36 +582,4 @@ private byte[] reverseArray(byte[] array) {
 		i++;
 	}
 	return array
-}
-
-private testCmd(){
-	//log.trace zigbee.parse('catchall: 0104 0501 01 01 0140 00 4F2D 01 00 0000 07 00 ')
-	//beep(10)
-	//test exit delay
-	//log.debug device.zigbeeId
-	//testingTesting()
-	//discoverCmds()
-	//zigbee.configureReporting(1,0x20,0x20,3600,43200,0x01)		//battery reporting
-	//["raw 0x0001 {00 00 06 00 2000 20 100E FEFF 01}",
-	//"send 0x${device.deviceNetworkId} 1 1"]
-	//zigbee.command(0x0003, 0x00, "0500") //Identify: blinks connection light
-    
-	//log.debug 		//temperature reporting  
-    
-	return zigbee.readAttribute(0x0020,0x01) + 
-		    zigbee.readAttribute(0x0020,0x02) +
-		    zigbee.readAttribute(0x0020,0x03)
-}
-
-private discoverCmds(){
-	List cmds = ["raw 0x0501 {08 01 11 0011}", 'delay 200',
-				 "send 0x${device.deviceNetworkId} 1 1", 'delay 500']
-	cmds
-}
-
-private testingTesting() {
-	log.debug "Delay: "+device.currentState("armMode").toString()
-	List cmds = ["raw 0x501 {09 01 04 050A}", 'delay 200',
-				 "send 0x${device.deviceNetworkId} 1 1", 'delay 500']
-	cmds
 }
