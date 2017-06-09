@@ -18,6 +18,7 @@ metadata {
 		capability "Battery"
 		capability "Configuration"
         capability "Motion Sensor"
+        capability "Lock Codes"
 		capability "Temperature Measurement"
 		capability "Refresh"
 		capability "Tamper Alert"
